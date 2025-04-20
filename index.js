@@ -25,15 +25,9 @@ app.use('/news', newsRoutes);
 /* Server PORT */
 const port = process.env.PORT || 3000;
 /* CONNECT DATABASE */
-mongoose.connect(process.env.MONGO_URL)
-    .then(() => {
-        console.log("Database Connected");
-        app.listen(port, () => {
-            console.log(`App is Running in port ${port}`)
-        })
-    }).catch((err) => {
-        console.log(err)
-    })
+app.listen(port, () => {
+    console.log(`App is Running in port ${port}`)
+});
 
 /* VERCEL SERVER START */
 /* export default app;
