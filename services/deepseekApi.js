@@ -5,16 +5,25 @@ import axios from "axios";
  * 
  * @param {Array} news News articles to be summarized
  * @param {String} summaryRig Summary rigorous to be used for summarization
- * @param {String} language Language of summary
+ * @param {String} language Language of summary. Two Availales: 'pt' and 'en'.
+ * @param {String} newsType Type of the news to be filtered
  */
-export const summaryNews = async (news, summaryRig, language) => {
+export const summaryNews = async (news, summaryRig, language, newsType) => {
 
     try {
 
+        if (news.length == 0) {
+            return news;
+        }
+
+        // PHRASES LIMIT
         let phraseLimit;
+
+        // MESSAGE TEMPLATE
         let message;
 
 
+        // Set the phrase limit based on the summaryRig
         switch (summaryRig) {
             case 'low':
                 phraseLimit = 10;
@@ -30,54 +39,13 @@ export const summaryNews = async (news, summaryRig, language) => {
                 break;
         }
 
-        switch (language) {
-            case 'pt':
-                message = [
-                    { role: 'system', content: 'Você é um assistente que resume notícias em português.' },
-                    {
-                        role: 'user', content: `Resuma esta notícia em até ${phraseLimit} frases e me diga o seu tipo de notícia (Ex: Política, Econômia...): ${news.title}. Conteúdo: ${noticia.description}. 
-                Siga este template de resposta: 
-                
-                Tipo de Notícia: Política
+        // Set the message template based on the language
+        message = buildMessage(language, news, newsType, phraseLimit);
 
-                Notícia resumida: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                ` }
-                ]
-                break;
-            case 'en':
-                message = [
-                    { role: 'system', content: 'You are an assistant who summarizes news in English.' },
-                    {
-                        role: 'user', content: `Summarize this news in up to ${phraseLimit} sentences and tell me what type of news it is (Ex: Politics, Economy...): ${news.title}. Content: ${noticia.description}. 
-                Follow this response template:
-
-                News Type: Politics
-
-                Summary news: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            `}
-                ]
-                break;
-            default:
-                message = [
-                    { role: 'system', content: 'You are an assistant who summarizes news in English.' },
-                    {
-                        role: 'user', content: `Summarize this news in up to ${phraseLimit} sentences and tell me what type of news it is (Ex: Politics, Economy...): ${news.title}. Content: ${noticia.description}. 
-                Follow this response template:
-
-                News Type: Politics
-
-                Summary news: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            `}
-                ]
-                break;
-        }
-
-        const response = await axios.post('https://api.deepseek.com/v1/chat/completions', {
-            model: 'deepseek-chat',
-            messages: [
-                { role: 'system', content: 'Você é um assistente que resume notícias em português.' },
-                { role: 'user', content: `Resuma esta notícia em 3 frases: ${news.title}. Conteúdo: ${noticia.description}` }
-            ]
+        // Make the API request to DeepSeek with the template message
+        const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
+            model: 'deepseek/deepseek-r1:free',
+            messages: message
         }, {
             headers: {
                 'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
@@ -85,9 +53,64 @@ export const summaryNews = async (news, summaryRig, language) => {
             }
         });
 
-        return response.data.choices[0].message.content;
+
+        // Check if the response contains an error message
+        if (response.data.error) {
+            news.iaError = true;
+            return news;
+        };
+
+        const data = response.data.choices[0].message.content
+
+        if (data == 'NOT') {
+            // If the response is "NOT" (news invalid), return an empty array
+            return []
+        } else {
+            // If the response is valid, return the summarized news
+            news.summarizedNews = data;
+            news.iaError = false;
+            return news;
+        }
     } catch (error) {
-        console.error("Error in AI summaryNews:", error.message);
-        return { isError: true, message: error.message };
+        console.error("Error in DeepSeek AI Search:", error);
+        throw error;
     }
 }
+
+/// Function to build the message template based on language and news type
+const buildMessage = (language, news, newsType, phraseLimit) => {
+    const templates = {
+        pt: [
+            { role: 'system', content: 'Você é um assistente que analisa, resume notícias e as traduz para português.' },
+            {
+                role: 'user',
+                content: `Analise esta notícia. Caso ela atenda ao tema ${newsType}, resuma em português esta notícia em até ${phraseLimit} frases.
+                Título: ${news.title}. 
+                Conteúdo: ${news.content}. 
+                
+                Siga este template de resposta: 
+
+                Notícia resumida: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+                Caso ela não atenda ao tema ${newsType}, responda apenas "NOT".`
+            }
+        ],
+        en: [
+            { role: 'system', content: 'You are an assistant who analyzes, summarizes news and translates it into English.' },
+            {
+                role: 'user',
+                content: `Analyze this news story. If it fits the ${newsType} theme, summarize this news story in English in up to ${phraseLimit} sentences. 
+                Title: ${news.title}. 
+                Content: ${news.content}.
+
+                Follow this response template:
+
+                Summary News: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+                If it does not fit the ${newsType} theme, just answer "NOT".`
+            }
+        ]
+    };
+
+    return templates[language] || templates['en'];
+};

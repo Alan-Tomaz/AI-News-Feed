@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import newsRoutes from './routes/news.js';
+import { executeGetNews, paramsEn } from "./services/getNewsofController.js";
+import cron from 'node-cron';
 
 /* CONFIG */
 const app = express();
@@ -21,10 +23,11 @@ app.get("/", (req, res) => res.status(200).json({ status: 200, msg: "Hello World
 app.post("/", (req, res) => res.status(200).json({ status: 200, msg: "Hello World!" }));
 app.use('/news', newsRoutes);
 
-/* MONGOOSE SETUP */
+// GET NEWS EVERY DAY AT 08:00 AM AUTOMATICALLY
+/* cron.schedule('49 16 * * *', () => executeGetNews(paramsEn)) */
+
 /* Server PORT */
 const port = process.env.PORT || 3000;
-/* CONNECT DATABASE */
 app.listen(port, () => {
     console.log(`App is Running in port ${port}`)
 });
