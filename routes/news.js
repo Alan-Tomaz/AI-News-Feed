@@ -1,5 +1,5 @@
 import express from 'express';
-import { getEconomicNews, getITNews, getNews, getPolicyNews } from '../controllers/news.js';
+import { getEconomicNews, getITNews, getNews, getPolicyNews, triggerGetNews } from '../controllers/news.js';
 
 const router = express.Router();
 
@@ -13,6 +13,6 @@ router.get("/economy/get", getEconomicNews);
 // Get IT News
 router.get("/it/get", getITNews);
 // Trigger News Get Routine
-router.get("/trigger/get", getITNews);
+router.get("/trigger/get", triggerGetNews);
 
 export default router;

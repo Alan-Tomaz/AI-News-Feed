@@ -38,10 +38,10 @@ ${a.articles.map(formatArticle).join("\n\n")}
                         .map(article => article.urlToImage);
 
                     // Check if the message exceeds the limit and split if necessary
-                    if (message.length > 4096) {
+                    if (message.length > 4000) {
                         console.log('MESSAGE TOO LONG, SPLITTING INTO CHUNKS...');
-                        // Split the message into chunks of 4096 characters
-                        const chunks = splitMessage(message, 4096);
+                        // Split the message into chunks of 4000 characters
+                        const chunks = splitMessage(message, 4000);
 
                         // Send each chunk separately
                         for (const chunk of chunks) {
@@ -49,7 +49,7 @@ ${a.articles.map(formatArticle).join("\n\n")}
 
                             await axios.post(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
                                 chat_id: process.env.TELEGRAM_CHAT_ID,
-                                text: chunk,
+                                text: escapeMarkdown(chunk),
                                 parse_mode: "Markdown", // Use Markdown for formatting
                                 photo: sectionMediaUrls.length > 0 && index == 0 ? sectionMediaUrls : undefined, // Include images if available
                             })
@@ -58,7 +58,7 @@ ${a.articles.map(formatArticle).join("\n\n")}
                     else {
                         await axios.post(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
                             chat_id: process.env.TELEGRAM_CHAT_ID,
-                            text: message,
+                            text: escapeMarkdown(message),
                             parse_mode: "Markdown", // Use Markdown for formatting
                             photo: sectionMediaUrls.length > 0 ? sectionMediaUrls : undefined, // Include images if available
                         })
@@ -90,12 +90,12 @@ ${a.articles.map((elem, index) => formatArticle(elem, index)).join("\n\n")}
                     .map(article => article.urlToImage);
 
                 // Check if the message exceeds the limit and send separately if necessary
-                if ((message + section).length > 4096 || mediaUrls.length + sectionMediaUrls.length > 10) {
+                if ((message + section).length > 4000 || mediaUrls.length + sectionMediaUrls.length > 10) {
 
                     // If has a message, send it before sending the next one
                     if (message.trim()) {
                         // Check if the message will exceed the limit and send the current message
-                        if (message.length == 4096) {
+                        if (message.length == 4000) {
 
                             mediaUrls = mediaUrls.concat(sectionMediaUrls); // Add new media URLs
                             hasSendedMedia = true; // Set the flag to true
@@ -103,7 +103,7 @@ ${a.articles.map((elem, index) => formatArticle(elem, index)).join("\n\n")}
                             // Send the current message before sending the next one
                             await axios.post(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
                                 chat_id: process.env.TELEGRAM_CHAT_ID,
-                                text: message,
+                                text: escapeMarkdown(message),
                                 parse_mode: "Markdown",
                                 photo: mediaUrls.length > 0 ? mediaUrls : undefined, // Include images if available
                             });
@@ -114,13 +114,12 @@ ${a.articles.map((elem, index) => formatArticle(elem, index)).join("\n\n")}
                             hasSendedMedia = true; // Set the flag to true
 
                             message = message + section; // Add the remaining section to the message
-                            const chunks = splitMessage(message, 4096);
+                            const chunks = splitMessage(message, 4000);
                             for (const chunk of chunks) {
-                                if (chunk.length >= 4096) {
-                                    console.log(chunk.length)
+                                if (chunk.length >= 4000) {
                                     await axios.post(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
                                         chat_id: process.env.TELEGRAM_CHAT_ID,
-                                        text: chunk,
+                                        text: escapeMarkdown(chunk),
                                         parse_mode: "Markdown",
                                         photo: mediaUrls.length > 0 ? mediaUrls : undefined, // Include images if available
                                     });
@@ -135,13 +134,13 @@ ${a.articles.map((elem, index) => formatArticle(elem, index)).join("\n\n")}
 
 
                     // Split the section into chunks if it exceeds the limit and send
-                    if (section.length > 4096) {
-                        const chunks = splitMessage(section, 4096);
+                    if (section.length > 4000) {
+                        const chunks = splitMessage(section, 4000);
                         for (const chunk of chunks) {
-                            if (chunk.length >= 4096) {
+                            if (chunk.length >= 4000) {
                                 await axios.post(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
                                     chat_id: process.env.TELEGRAM_CHAT_ID,
-                                    text: chunk,
+                                    text: escapeMarkdown(chunk),
                                     parse_mode: "Markdown",
                                 });
                             } else {
@@ -161,7 +160,7 @@ ${a.articles.map((elem, index) => formatArticle(elem, index)).join("\n\n")}
             if (message.trim()) {
                 await axios.post(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
                     chat_id: process.env.TELEGRAM_CHAT_ID,
-                    text: message,
+                    text: escapeMarkdown(message),
                     parse_mode: "Markdown", // Use Markdown for formatting
                     photo: mediaUrls.length > 0 ? mediaUrls : undefined,
                 })
@@ -207,3 +206,25 @@ const splitMessage = (message, maxLength) => {
     parts.push(message);
     return parts;
 };
+
+// Helper function to escape special characters in Markdown
+const escapeMarkdown = (text) => {
+    return text
+        /*   .replace(/_/g, '\\_') */
+        .replace(/\[/g, '\\[')
+        .replace(/\]/g, '\\]')
+    /*  .replace(/\(/g, '\\(')
+     .replace(/\)/g, '\\)')
+     .replace(/~/g, '\\~')
+     .replace(/`/g, '\\`')
+     .replace(/>/g, '\\>')
+     .replace(/#/g, '\\#')
+     .replace(/\+/g, '\\+')
+     .replace(/-/g, '\\-')
+     .replace(/=/g, '\\=')
+     .replace(/\|/g, '\\|')
+     .replace(/{/g, '\\{')
+     .replace(/}/g, '\\}')
+     .replace(/\./g, '\\.')
+     .replace(/!/g, '\\!'); */
+}

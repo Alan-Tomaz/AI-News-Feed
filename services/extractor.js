@@ -3,6 +3,7 @@ import { JSDOM } from "jsdom";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import puppeteer from "puppeteer";
+import striptags from 'striptags';
 
 async function extractWithCheerio(url) {
     try {
@@ -84,7 +85,8 @@ export const abstractNews = async (news) => {
                 const result = await method(url);
                 if (result && result.length > 800) { // Check if the result is valid
                     console.log(`✅ Success with ${method.name}`);
-                    a.content = result
+                    const newResult = striptags(result); // remove HTML tags
+                    a.completeContent = newResult
                     break;
                 }
                 console.error(`❌ Error with ${method.name}:`, url);

@@ -86,7 +86,7 @@ const buildMessage = (language, news, newsType, phraseLimit) => {
                 role: 'user',
                 content: `Analise esta notícia. Caso ela atenda ao tema ${newsType}, resuma em português esta notícia em até ${phraseLimit} frases.
                 Título: ${news.title}. 
-                Conteúdo: ${news.content}. 
+                Conteúdo: ${news.completeContent}. 
                 
                 Siga este template de resposta: 
 
@@ -101,7 +101,7 @@ const buildMessage = (language, news, newsType, phraseLimit) => {
                 role: 'user',
                 content: `Analyze this news story. If it fits the ${newsType} theme, summarize this news story in English in up to ${phraseLimit} sentences. 
                 Title: ${news.title}. 
-                Content: ${news.content}.
+                Content: ${news.completeContent}.
 
                 Follow this response template:
 
