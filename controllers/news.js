@@ -1,5 +1,5 @@
 import { summaryNews } from "../services/deepseekApi.js";
-import { executeGetNews, paramsPT } from "../services/getNewsofController.js";
+import { executeGetNews, paramsPT } from "../services/getNewsOfController.js";
 import { searchNews } from "../services/newsApi.js";
 import { sendEmail } from "../services/nodemailerApi.js";
 import { abstractNews } from "../services/extractor.js";
