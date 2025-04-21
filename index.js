@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import newsRoutes from './routes/news.js';
-import { executeGetNews, paramsEn } from "./services/getNewsofController.js";
+import { executeGetNews, paramsEn } from "./services/getNewsOfController.js";
 import cron from 'node-cron';
 
 /* CONFIG */
