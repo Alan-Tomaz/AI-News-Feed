@@ -12,5 +12,7 @@ router.get("/policy/get", getPolicyNews);
 router.get("/economy/get", getEconomicNews);
 // Get IT News
 router.get("/it/get", getITNews);
+// Trigger News Get Routine
+router.get("/trigger/get", getITNews);
 
 export default router;

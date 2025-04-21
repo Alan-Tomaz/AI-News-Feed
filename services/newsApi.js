@@ -5,7 +5,7 @@ import axios from 'axios';
  * @param {Array} trustSources Your reliable sources. Ex: 'cnn.com'. If the string is null, the search will be extensive.
  * @param {Array} searchTerms A Array of params that you want to search to. The strings inside the array will be searched with a OR operator. Array Ex: ['technology', 'computing',], in URL will be: techonology OR computing.
  * @param {String} language Possible options: 'ar', 'de', 'en', 'es', 'fr', 'he', 'it', 'nl', 'no', 'pt', 'ru', 'sv', 'ud', 'zh'
- * @param {Number} pageSize Number of articles.
+ * @param {Number} pageSize Number of articles. Max: 10. Default is 5.
  * @param {String} date Possible Options: 'recent', 'week', 'month'. Recent means last two days.
  * @returns {string} Return the filtered news.
  */
@@ -71,7 +71,6 @@ export const searchNews = async (trustSources = [], searchTerms = ['technology',
 
     /* Insert the API KEY in the request */
     params.append('apiKey', apiKey);
-
 
     try {
         const response = await axios.get(`${baseUrl}?${params.toString()}`);

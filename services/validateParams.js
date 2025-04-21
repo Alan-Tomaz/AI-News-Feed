@@ -43,6 +43,10 @@ export const validateParams = ({ searchTerms, trustSources, summaryRig, language
         return { error: 'Invalid articles limit. It must be a number.' };
     }
 
+    if (articlesLimit > 10) {
+        return { error: 'Too Much Articles.' };
+    }
+
     if (!articlesDate || articlesDate == undefined || articlesDate == null) {
         articlesDate = 'recent';
     }

@@ -1,6 +1,8 @@
 import { summaryNews } from "../services/deepseekApi.js";
+import { executeGetNews, paramsPT } from "../services/getNewsofController.js";
 import { searchNews } from "../services/newsApi.js";
 import { sendEmail } from "../services/nodemailerApi.js";
+import { abstractNews } from "../services/extractor.js";
 import { sendToTelegram } from "../services/telegramApi.js";
 import { validateParams } from "../services/validateParams.js";
 
@@ -35,9 +37,12 @@ export const getNews = async (req, res) => {
             /* GET THE NEWS */
             console.log("SEARCHING NEWS FOR TYPE: " + a.articlesType + "...")
             const news = await searchNews(params.trustSources, a.searchTerms, params.language, params.articlesLimit, params.articlesDate);
+            // GET FULL CONTENT OF THE NEWS
+            console.log("ABSTRACTING NEWS FOR TYPE: " + a.articlesType + "...")
+            const updatedNews = await abstractNews(news);
             /* summary, translate (if necessary) and filter the news. If the news is not related to the topic, it is removed */
-            console.log(`FOUND ${news.length} ARTICLES. SUMMARIZING AND FILTERING NEWS OF TYPE: ${a.articlesType} WITH IA...`)
-            const summarizedNews = await Promise.all(news.map((n) => {
+            console.log(`FOUND ${updatedNews.length} ARTICLES. SUMMARIZING AND FILTERING NEWS OF TYPE: ${a.articlesType} WITH IA...`)
+            const summarizedNews = await Promise.all(updatedNews.map((n) => {
                 return summaryNews(n, params.summaryRig, params.language, a.articlesType);
             })).then(results => results.filter(element =>
                 element && // check if element is not null or undefined
@@ -66,33 +71,37 @@ export const getNews = async (req, res) => {
     }
 }
 
+// GET NEWS BY TYPE
 export const getNewsByType = async (req, res, type) => {
     try {
         let params = validateParams(req.body, false);
-        if (params.error) {
+        if (params.error) { // check if the params are valid
             return res.status(400).json({ error: params.error });
         }
 
         console.log("SEARCHING NEWS...");
-        const news = await searchNews(params.trustSources, params.searchTerms, params.language, params.articlesLimit, params.articlesDate);
-
-        console.log(`FOUND ${news.length} ARTICLES. SUMMARIZING AND FILTERING NEWS OF TYPE: ${type} WITH IA...`)
+        const news = await searchNews(params.trustSources, params.searchTerms, params.language, params.articlesLimit, params.articlesDate); // GET THE NEWS
+        // GET FULL CONTENT OF THE NEWS
+        console.log("ABSTRACTING NEWS FOR TYPE: " + type + "...")
+        const updatedNews = await abstractNews(news);
+        console.log(`FOUND ${updatedNews.length} ARTICLES. SUMMARIZING AND FILTERING NEWS OF TYPE: ${type} WITH IA...`)
+        // Summarize, translate (if necessary) and filter the news. If the news is not related to the topic, it is removed
         const summarizedNews = await Promise.all(
-            news.map((n) => summaryNews(n, params.summaryRig, params.language, type))
+            updatedNews.map((n) => summaryNews(n, params.summaryRig, params.language, type))
         ).then(results => results.filter(element =>
             element && // check if element is not null or undefined
             !(Array.isArray(element) && element.length === 0) // remove empty arrays
         ));
 
-        const articleList = [{ articles: summarizedNews, articlesType: type }];
+        const articleList = [{ articles: summarizedNews, articlesType: type }]; // ADD THE NEWS TO LIST
 
 
 
         console.log('SENDING EMAIL...');
-        await sendEmail(articleList, params.sendSeparately);
+        await sendEmail(articleList, params.sendSeparately); // SEND THE EMAIL
 
         console.log('SENDING TELEGRAM MESSAGE...');
-        await sendToTelegram(articleList, params.sendSeparately);
+        await sendToTelegram(articleList, params.sendSeparately); // SEND THE TELEGRAM MESSAGE
 
         console.log("EVERYTHING OK!")
         return res.status(200).json({ message: 'News sent successfully!', ...params, news: articleList });
@@ -108,3 +117,15 @@ export const getEconomicNews = (req, res) => getNewsByType(req, res, 'Economy');
 export const getPolicyNews = (req, res) => getNewsByType(req, res, 'Policy');
 // GET POLITICS NEWS
 export const getITNews = (req, res) => getNewsByType(req, res, 'IT');
+
+export const triggerGetNews = (req, res) => {
+    const token = req.query.token;
+    if (token !== process.env.GITHUB_ACTIONS_SECRET_TOKEN) {
+        return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    // GET THE NEWS
+    executeGetNews(paramsPT);
+
+    res.status(200).json({ message: "RUN BOT SUCCESSFULLY" });
+}
