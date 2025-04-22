@@ -1,14 +1,21 @@
-name: Trigger News Endpoint
+# Script to run a news routine job using GitHub Actions
+name: News Routine Trigger
 
 on:
   schedule:
-    - cron: '0 10 * * *' # Every day at 10:00 AM UTC
-  workflow_dispatch: # Allow manual triggering
+    - cron: '0 10 * * *'  # Runs every day at 10:00 AM UTC
+  workflow_dispatch:
 
 jobs:
-  call-api:
+  run-news-script:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Trigger News API
-        run: |
-          curl -X GET ${{secrets.VERCEL_URL}}/news/trigger/get?token=${{ secrets.ACTIONS_TOKEN }} 
+      - name: Clone Repository
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run news script
+        run: node services\getNewsRoutine.js
