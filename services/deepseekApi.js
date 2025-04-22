@@ -119,21 +119,21 @@ const buildMessage = (language, news, newsType, phraseLimit) => {
 // Helper function to escape special characters in Markdown
 const escapeMarkdown = (text) => {
     return text
-        .replace(/_/g, '\\_')
-        .replace(/\[/g, '\\[')
-        .replace(/\]/g, '\\]')
-        .replace(/\(/g, '\\(')
-        .replace(/\)/g, '\\)')
-        .replace(/~/g, '\\~')
-        /* .replace(/`/g, '\\`')
-        .replace(/>/g, '\\>') */
-        .replace(/#/g, '\\#')
-        .replace(/\+/g, '\\+')
-        /*  .replace(/-/g, '\\-') */
-        .replace(/=/g, '\\=')
-        .replace(/\|/g, '\\|')
-        .replace(/{/g, '\\{')
-        .replace(/}/g, '\\}')
-        .replace(/\./g, '\\.')
-        .replace(/!/g, '\\!');
+        /*  .replace(/_/g, '\\_')
+         .replace(/\[/g, '\\[')
+         .replace(/\]/g, '\\]')
+         .replace(/\(/g, '\\(')
+         .replace(/\)/g, '\\)')
+         .replace(/~/g, '\\~') */
+        .replace(/`/g, '\\`')
+        .replace(/>/g, '\\>')
+    /*   .replace(/#/g, '\\#')
+      .replace(/\+/g, '\\+')
+        .replace(/-/g, '\\-') 
+      .replace(/=/g, '\\=')
+      .replace(/\|/g, '\\|')
+      .replace(/{/g, '\\{')
+      .replace(/}/g, '\\}')
+      .replace(/\./g, '\\.')
+      .replace(/!/g, '\\!'); */
 }

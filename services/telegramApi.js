@@ -9,6 +9,21 @@ import axios from "axios";
  */
 export const sendToTelegram = async (articlesList, sendSeparately = false) => {
     try {
+
+        // Format the date to MM/DD/YYYY HH:mm:ss format
+        const formatDate = (isoDate) => {
+            const date = new Date(isoDate); // convert ISO string to Date object
+
+            const day = String(date.getDate()).padStart(2, '0'); // Day (1-31)
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Month (0-11, so +1)
+            const year = date.getFullYear(); // Ano
+            const hours = String(date.getHours()).padStart(2, '0'); // Hours
+            const minutes = String(date.getMinutes()).padStart(2, '0'); // Minutes
+            const seconds = String(date.getSeconds()).padStart(2, '0'); // Seconds
+
+            return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`; // Format MM/DD/YYYY HH:mm:ss
+        };
+
         /* Article Format */
         const formatArticle = (article, index) => `
 *Article ${index + 1}* \n
@@ -16,7 +31,7 @@ export const sendToTelegram = async (articlesList, sendSeparately = false) => {
 *Description:*  ${article.description || "No Description"} \n
 *Link:*  ${article.url || "#"} \n
 *Source:*  ${article.source?.name || "No Source"} \n
-*Published At:*  ${article.publishedAt || "No Date"} \n
+*Published At:*  ${formatDate(article.publishedAt) || "No Date"} \n
 ${article.iaError == true ? '❗ Error In IA API Search \n' : ''}
 *Content:*  
 
@@ -210,9 +225,9 @@ const splitMessage = (message, maxLength) => {
 // Helper function to escape special characters in Markdown
 const escapeMarkdown = (text) => {
     return text
-        /*   .replace(/_/g, '\\_') */
-        .replace(/\[/g, '\\[')
-        .replace(/\]/g, '\\]')
+    /*   .replace(/_/g, '\\_') */
+    /*      .replace(/\[/g, '\\[')
+         .replace(/\]/g, '\\]') */
     /*  .replace(/\(/g, '\\(')
      .replace(/\)/g, '\\)')
      .replace(/~/g, '\\~')
