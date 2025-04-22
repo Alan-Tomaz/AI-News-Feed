@@ -90,7 +90,7 @@ const buildMessage = (language, news, newsType, phraseLimit) => {
                 
                 Siga este template de resposta: 
 
-                Notícia resumida: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
                 Caso ela não atenda ao tema ${newsType}, responda apenas "NOT".`
             }
@@ -105,7 +105,7 @@ const buildMessage = (language, news, newsType, phraseLimit) => {
 
                 Follow this response template:
 
-                Summary News: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
                 If it does not fit the ${newsType} theme, just answer "NOT".`
             }
