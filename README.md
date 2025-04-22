@@ -36,7 +36,7 @@ Params:
 {String} summaryRig - The level of demand of the summary. Must be 'low', 'medium', 'high'. Default is medium.
 {String} language -  Possible options: Language of articles. Options: 'pt', 'en'
 {Number} articlesLimit - Number of articles per type. Max: 10. Default: 5
-{String} articlesDate - Dates to Search. Possible Options: 'recent', 'week', 'month'. Recent means last two days. Default: 'recent'.
+{String} articlesDate - Dates to Search. Possible Options: 'recent', 'week', 'month'. Recent means the last day. Default: 'recent'.
 {Boolean} sendSeparately If true, send each article type separately. if false, try to send all of them together.
 ```
 
@@ -49,7 +49,7 @@ Returns a list of news items of the type you chose
 {String} summaryRig - The level of demand of the summary. Must be 'low', 'medium', 'high'. Default is medium.
 {String} language -  Possible options: Language of articles. Options: 'pt', 'en'
 {Number} articlesLimit - Number of articles per type. Max: 10. Default: 5
-{String} articlesDate - Dates to Search. Possible Options: 'recent', 'week', 'month'. Recent means last two days. Default: 'recent'.
+{String} articlesDate - Dates to Search. Possible Options: 'recent', 'week', 'month'. Recent means the last day. Default: 'recent'.
 {Boolean} sendSeparately If true, send each article type separately. if false, try to send all of them together.
 ```
 
@@ -70,7 +70,7 @@ Params:
 {String} summaryRig - The level of demand of the summary. Must be 'low', 'medium', 'high'. Default is medium.
 {String} language -  Possible options: Language of articles. Options: 'pt', 'en'
 {Number} articlesLimit - Number of articles per type. Max: 10. Default: 5
-{String} articlesDate - Dates to Search. Possible Options: 'recent', 'week', 'month'. Recent means last two days. Default: 'recent'.
+{String} articlesDate - Dates to Search. Possible Options: 'recent', 'week', 'month'. Recent means the last day. Default: 'recent'.
 {Boolean} sendSeparately If true, send each article type separately. if false, try to send all of them together.
 ```
 
@@ -84,7 +84,7 @@ Expects an object with the following parameters.
 {String} summaryRig - The level of demand of the summary. Must be 'low', 'medium', 'high'. Default is medium.
 {String} language -  Possible options: Language of articles. Options: 'pt', 'en'
 {Number} articlesLimit - Number of articles per type. Max: 10. Default: 5
-{String} articlesDate - Dates to Search. Possible Options: 'recent', 'week', 'month'. Recent means last two days. Default: 'recent'.
+{String} articlesDate - Dates to Search. Possible Options: 'recent', 'week', 'month'. Recent means the last day. Default: 'recent'.
 {Boolean} sendSeparately If true, send each article type separately. if false, try to send all of them together.
 ```
 

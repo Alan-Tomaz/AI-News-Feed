@@ -13,7 +13,7 @@ import { validateParams } from "../services/validateParams.js";
  * @param {String} summaryRig Possible options: 'low', 'medium', 'high'. Default is medium.
  * @param {String} language Possible options:  'pt', 'en'
  * @param {Number} articlesLimit Number of articles.
- * @param {String} articlesDate Possible Options: 'recent', 'week', 'month'. Recent means last two days.
+ * @param {String} articlesDate Possible Options: 'recent', 'week', 'month'. Recent means the last day.
  * @param {Boolean} sendSeparately If true, send each article type separately.
  * @param {Array} articles A array of objects containing the articles to be sent. Ex: [{articlesType: "Economy", searchTerms: ["economic, inflation"]}]. Required if geralSearch is true. Required in routes that search by multiple types.
  * @returns {string} Return the filtered news.
@@ -75,6 +75,7 @@ export const getNewsByType = async (req, res, type) => {
     try {
         let params = validateParams(req.body, false);
         if (params.error) { // check if the params are valid
+            console.log(params.error);
             return res.status(400).json({ error: params.error });
         }
 

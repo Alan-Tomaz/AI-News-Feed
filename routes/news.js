@@ -1,5 +1,5 @@
 import express from 'express';
-import { getEconomicNews, getITNews, getNews, getPolicyNews, triggerGetNews } from '../controllers/news.js';
+import { getEconomicNews, getITNews, getNews, getPolicyNews } from '../controllers/news.js';
 
 const router = express.Router();
 
