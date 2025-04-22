@@ -1,4 +1,4 @@
-# **Automatic-News-Feed-Generator**
+# **Automatic News Feed Generator**
 
 ## An automatic news feed generator that sends news daily via email and Telegram.
 
