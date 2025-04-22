@@ -25,7 +25,7 @@ app.post("/", (req, res) => res.status(200).json({ status: 200, msg: "Hello Worl
 app.use('/news', newsRoutes);
 app.use('/test', test);
 
-// GET NEWS EVERY DAY AT 08:00 AM AUTOMATICALLY
+// GET NEWS EVERY DAY AT 08:00 AM AUTOMATICALLY.
 /* cron.schedule('49 16 * * *', () => executeGetNews(paramsEn)) */
 
 /* Server PORT */

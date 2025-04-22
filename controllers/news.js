@@ -1,5 +1,4 @@
 import { summaryNews } from "../services/deepseekApi.js";
-import { executeGetNews, paramsPT } from "../services/getNewsOfController.js";
 import { searchNews } from "../services/newsApi.js";
 import { sendEmail } from "../services/nodemailerApi.js";
 import { abstractNews } from "../services/extractor.js";
@@ -10,13 +9,13 @@ import { validateParams } from "../services/validateParams.js";
  * @description This functions is used to get the news from the API and send it to the user by email and Telegram.
  * Params of req.body:
  * @param {Array} trustSources Your reliable sources. Ex: 'cnn.com'. If the string is null, the search will be extensive. Can be empty.
- * @param {Array} searchTerms A Array of params that you want to search to. The strings inside the array will be searched with a OR operator. Array Ex: ['technology', 'computing',], in URL will be: techonology OR computing. Required.
+ * @param {Array} searchTerms A Array of params that you want to search to. The strings inside the array will be searched with a OR operator. Array Ex: ['technology', 'computing',], in URL will be: techonology OR computing. Required in routes that search by one type.
  * @param {String} summaryRig Possible options: 'low', 'medium', 'high'. Default is medium.
  * @param {String} language Possible options:  'pt', 'en'
  * @param {Number} articlesLimit Number of articles.
  * @param {String} articlesDate Possible Options: 'recent', 'week', 'month'. Recent means last two days.
  * @param {Boolean} sendSeparately If true, send each article type separately.
- * @param {Array} articles A array of objects containing the articles to be sent. Ex: [{articlesType: "Economy", searchTerms: ["economic, inflation"]}]. Required if geralSearch is true.
+ * @param {Array} articles A array of objects containing the articles to be sent. Ex: [{articlesType: "Economy", searchTerms: ["economic, inflation"]}]. Required if geralSearch is true. Required in routes that search by multiple types.
  * @returns {string} Return the filtered news.
  */
 
@@ -117,15 +116,3 @@ export const getEconomicNews = (req, res) => getNewsByType(req, res, 'Economy');
 export const getPolicyNews = (req, res) => getNewsByType(req, res, 'Policy');
 // GET POLITICS NEWS
 export const getITNews = (req, res) => getNewsByType(req, res, 'IT');
-
-export const triggerGetNews = (req, res) => {
-    const token = req.query.token;
-    if (token !== process.env.GITHUB_ACTIONS_SECRET_TOKEN) {
-        return res.status(403).json({ error: "Unauthorized" });
-    }
-
-    // GET THE NEWS
-    executeGetNews(paramsPT);
-
-    res.status(200).json({ message: "RUN BOT SUCCESSFULLY" });
-}
