@@ -18,4 +18,4 @@ jobs:
         run: npm install
 
       - name: Run news script
-        run: node services ./services/getNewsRoutine.js
+        run: node services/getNewsRoutine.js
