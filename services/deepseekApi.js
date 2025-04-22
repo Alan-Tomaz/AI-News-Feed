@@ -67,7 +67,8 @@ export const summaryNews = async (news, summaryRig, language, newsType) => {
             return []
         } else {
             // If the response is valid, return the summarized news
-            news.summarizedNews = data;
+            const summarizedNews = escapeMarkdown(data)
+            news.summarizedNews = summarizedNews;
             news.iaError = false;
             return news;
         }
@@ -114,3 +115,25 @@ const buildMessage = (language, news, newsType, phraseLimit) => {
 
     return templates[language] || templates['en'];
 };
+
+// Helper function to escape special characters in Markdown
+const escapeMarkdown = (text) => {
+    return text
+        .replace(/_/g, '\\_')
+        .replace(/\[/g, '\\[')
+        .replace(/\]/g, '\\]')
+        .replace(/\(/g, '\\(')
+        .replace(/\)/g, '\\)')
+        .replace(/~/g, '\\~')
+        .replace(/`/g, '\\`')
+        .replace(/>/g, '\\>')
+        .replace(/#/g, '\\#')
+        .replace(/\+/g, '\\+')
+        .replace(/-/g, '\\-')
+        .replace(/=/g, '\\=')
+        .replace(/\|/g, '\\|')
+        .replace(/{/g, '\\{')
+        .replace(/}/g, '\\}')
+        .replace(/\./g, '\\.')
+        .replace(/!/g, '\\!');
+}
