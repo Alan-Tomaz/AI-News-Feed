@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import newsRoutes from './routes/news.js';
+import test from './routes/telegramApi.js';
 import { executeGetNews, paramsEn } from "./services/getNewsOfController.js";
 import cron from 'node-cron';
 
@@ -22,6 +23,7 @@ app.options('*', cors()); // Response all OPTIONS Requests
 app.get("/", (req, res) => res.status(200).json({ status: 200, msg: "Hello World!" }));
 app.post("/", (req, res) => res.status(200).json({ status: 200, msg: "Hello World!" }));
 app.use('/news', newsRoutes);
+app.use('/test', test);
 
 // GET NEWS EVERY DAY AT 08:00 AM AUTOMATICALLY
 /* cron.schedule('49 16 * * *', () => executeGetNews(paramsEn)) */
