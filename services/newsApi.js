@@ -74,8 +74,8 @@ export const searchNews = async (trustSources = [], searchTerms = ['technology',
     }
 
     /* Insert the sort by filter in the request */
-    /*     params.append('sortBy', 'popularity');
-     */
+    params.append('sortBy', 'popularity');
+
 
     /* Insert the API KEY in the request */
     params.append('apiKey', apiKey);
