@@ -13,7 +13,7 @@ import { validateParams } from "../services/validateParams.js";
  * @param {String} summaryRig Possible options: 'low', 'medium', 'high'. Default is medium.
  * @param {String} language Possible options:  'pt', 'en'
  * @param {Number} articlesLimit Number of articles.
- * @param {String} articlesDate Possible Options: 'recent', 'week', 'month'. Recent means the last day.
+ * @param {String} articlesDate Possible Options: 'recent', '2days', '3days', 'week', 'month'. Recent means the last day.
  * @param {Boolean} sendSeparately If true, send each article type separately.
  * @param {Array} articles A array of objects containing the articles to be sent. Ex: [{articlesType: "Economy", searchTerms: ["economic, inflation"]}]. Required if geralSearch is true. Required in routes that search by multiple types.
  * @returns {string} Return the filtered news.

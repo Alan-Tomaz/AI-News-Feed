@@ -51,8 +51,8 @@ export const validateParams = ({ searchTerms, trustSources, summaryRig, language
         articlesDate = 'recent';
     }
 
-    if (articlesDate != 'recent' && articlesDate != 'week' && articlesDate != 'month') {
-        return { error: 'Invalid articles date. It must be recent, week or month.' };
+    if (articlesDate != 'recent' && articlesDate != '2days' && articlesDate != '3days' && articlesDate != 'week' && articlesDate != 'month') {
+        return { error: 'Invalid articles date. It must be recent, 2days, 3days, week or month.' };
     }
 
     if (!sendSeparately || sendSeparately == undefined || sendSeparately == null) {

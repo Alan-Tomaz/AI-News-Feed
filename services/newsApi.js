@@ -46,6 +46,14 @@ export const searchNews = async (trustSources = [], searchTerms = ['technology',
             startDate = new Date();
             startDate.setDate(currentDate.getDate() - 1);
             break;
+        case '2days':
+            startDate = new Date();
+            startDate.setDate(currentDate.getDate() - 2);
+            break;
+        case '3days':
+            startDate = new Date();
+            startDate.setDate(currentDate.getDate() - 3);
+            break;
         case 'week':
             startDate = new Date();
             startDate.setDate(currentDate.getDate() - 7);
