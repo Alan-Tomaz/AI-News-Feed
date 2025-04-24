@@ -18,7 +18,7 @@ export const paramsPT = {
     summaryRig: 'medium',
     language: 'pt',
     articlesLimit: 5,
-    articlesDate: 'recent',
+    articlesDate: '2days',
 };
 
 // Function to execute getNews with simulated request and response

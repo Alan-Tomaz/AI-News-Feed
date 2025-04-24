@@ -18,7 +18,7 @@ When one of these routes is triggered, they execute one of the controllers, whic
 - Check the parameters, and if everything is correct, proceed to the next step
 - Search for news based on the parameters sent through the NewsAPI
 - Search for the full content of the news through the Cheerio, Readability and Puppeteer libs, since the NewsAPI does not return the full news.
-- Send the content of the news to the Deepseek AI (through the OpenRouter API) which in turn summarizes the articles.
+- Send the content of the news to the Deepseek AI (through the OpenRouter API) which in turn summarizes the articles. AI will also remove news that does not address the reported topic.
 - Send the articles by email.
 - Send the articles via Telegram
 
